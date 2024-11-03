@@ -27,8 +27,6 @@
 #include <stddef.h>
 #include <windows.h>
 
-typedef __int64 QWORD;
-
 #define SUBHOOK_CODE_PROTECT_FLAGS PAGE_EXECUTE_READWRITE
 
 int subhook_unprotect(void *address, size_t size) {
@@ -40,38 +38,7 @@ int subhook_unprotect(void *address, size_t size) {
   return !result;
 }
 
-void *subhook_alloc_code(void *target_address, size_t size) {
-#if defined _M_AMD64 || defined __amd64__
-  if (target_address != NULL) {
-    SYSTEM_INFO sys_info;
-    DWORD page_size;
-    QWORD offset;
-
-    GetSystemInfo(&sys_info);
-    page_size = sys_info.dwPageSize;
-
-    QWORD pivot = (QWORD)target_address & ~((QWORD)page_size - 1);
-    void *result;
-
-    for (offset = page_size; offset <= ((QWORD)1 << 31); offset += page_size) {
-      result = VirtualAlloc((void *)(pivot - offset),
-                            size,
-                            MEM_COMMIT | MEM_RESERVE,
-                            SUBHOOK_CODE_PROTECT_FLAGS);
-      if (result != NULL) {
-        return result;
-      }
-      result = VirtualAlloc((void *)(pivot + offset),
-                            size,
-                            MEM_COMMIT | MEM_RESERVE,
-                            SUBHOOK_CODE_PROTECT_FLAGS);
-      if (result != NULL) {
-        return result;
-      }
-    }
-  }
-#endif
-
+void *subhook_alloc_code(size_t size) {
   return VirtualAlloc(NULL,
                       size,
                       MEM_COMMIT | MEM_RESERVE,

@@ -1,16 +1,8 @@
-Mirror of [https://github.com/Zeex/subhook](Zeex/subhook) from [https://archive.softwareheritage.org/](archive.softwareheritage.org)
-
 [![Build Status][build_status]][build]
 [![Build Status - Windows][build_status_win]][build_win]
 
-SubHook is a simple library for [hooking][wikipedia_hooking] arbitrary functions
-at run time. It's written in C and also provides an optional C++ wrapper API.
-
-The library was originally developed to intercept a bunch of API calls in the
-[SA-MP server](https://www.sa-mp.com), which is a Windows/Linux 32-bit app, in
-order to extend a plugin that I wrote for it. Since then, it has been adapted
-to better support x86_64, macOS, and more common use-cases, thanks to the
-[contributors][github_contributors].
+SubHook is a super-simple hooking library for C and C++ that works on Windows,
+Linux and macOS. It supports x86 only (32-bit and 64-bit).
 
 Installation
 ------------
@@ -138,8 +130,8 @@ int main() {
 }
 ```
 
-Known issues/limitations
-------------------------
+Known issues
+------------
 
 * `subhook_get_trampoline()` may return NULL because only a small subset of
   x86 instructions is supported by the disassembler in this library (just
@@ -155,21 +147,13 @@ Known issues/limitations
   enable the use of 64-bit offsets in 64-bit mode N becomes 14 (see the
   definition of `subhook_jmp64`).
 
-  On x64_64, another cause could be that the function contains instructions
-  referencing memory that is too far away from the trampline code buffer's
-  address `trampoline_addr`, such as `cmp dword ptr [some_32bit_addr], rax`
-  (i.e. RIP-relative addressing) where the offset between `some_32bit_addr`
-  and `trampoline_addr` cannot fit into 32 bits, and therefore we cannot
-  update the memory address referenced in the original code (we need to do
-  that because because it's relative).
-
 * Some systems protect executable code form being modified at runtime, which
   will not allow you to install hooks, or don't allow to mark heap-allocated
   memory as executable, which prevents the use of trampolines.
 
   For example, on Fedora you can have such problems because of SELinux (though
   you can disable it or exclude your files).
-
+  
 License
 -------
 
@@ -179,5 +163,3 @@ Licensed under the 2-clause BSD license.
 [build_status]: https://travis-ci.org/Zeex/subhook.svg?branch=master
 [build_win]: https://ci.appveyor.com/project/Zeex/subhook/branch/master
 [build_status_win]: https://ci.appveyor.com/api/projects/status/q5sp0p8ahuqfh8e4/branch/master?svg=true
-[wikipedia_hooking]: https://en.wikipedia.org/wiki/Hooking
-[github_contributors]: https://github.com/Zeex/subhook/graphs/contributors
