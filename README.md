@@ -1,4 +1,4 @@
-Mirror of [https://github.com/Zeex/subhook](Zeex/subhook) from [https://archive.softwareheritage.org/vault/](archive.softwareheritage.org/vault/)
+Mirror of [https://github.com/Zeex/subhook](Zeex/subhook) from [https://archive.softwareheritage.org/](archive.softwareheritage.org)
 
 [![Build Status][build_status]][build]
 [![Build Status - Windows][build_status_win]][build_win]
